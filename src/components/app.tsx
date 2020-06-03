@@ -12,6 +12,7 @@ import env from '../env';
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoginForm } from './login/login';
 
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
@@ -118,6 +119,12 @@ function App() {
     }
   }, [config]);
 
+  const logout = () =>{
+    localStorage.removeItem('Authorization');
+    const redirectUrl: string = config?.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(document.location.href)) || 'login';
+    document.location.href = redirectUrl;
+  }
+
   return (
     <div className="restool-app">
       {
@@ -134,14 +141,22 @@ function App() {
           }
           <Router>
             <aside>
+  
               <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
+              <div className="nav-section">
               {
                 <Navigation />
               }
+              </div>
+              <div className="logout" onClick={logout}>
+                <i className="fa fa-sign-out" aria-hidden="true"></i>
+                <p>Logout</p>
+              </div>
             </aside>
             {
               config &&
               <Switch>
+                <Route exact path="/login" component={LoginForm} />
                 <Route exact path="/:page" component={Page} />
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
