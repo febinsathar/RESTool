@@ -18,13 +18,17 @@ const PageComp = ({ context }: IProps) => {
   const { activePage,httpService, config } = context;
   const authConfig = config?.auth;
   const loginConfig: IConfigMethod | undefined = authConfig?.method?.login;
+  if(!loginConfig){
+    closeFormPopup();
+  }
   const pageHeaders: any = loginConfig?.requestHeaders || {};
   const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
 
-  function closeFormPopup(refreshData: boolean = false) {
+
+  function closeFormPopup() {
         console.log("closeeee")
 
-    const { from } = location.state || { from: { pathname: '/' } };
+    const from = (location?.state as any)?.from || { pathname: '/' };
     replace(from)
 
     // const encoded = new Buffer(`${user}:${pwd}`).toString('base64');

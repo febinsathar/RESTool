@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Button } from '../button/button.comp';
-
+import { groupBy } from 'lodash';
 import './navigation.scss';
+import Accordion from '../accordion/accordion.comp';
 
 interface IProps {
   context: IAppContext
@@ -13,6 +14,11 @@ interface IProps {
 
 const NavigationComp = ({ context: { config } }: IProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
+
+  let pages = config?.pages || [];
+  let groupedPages = groupBy(pages, 'group') || {};
+  console.log(groupedPages)
+
 
   return (
     <nav className="app-nav">
@@ -26,11 +32,17 @@ const NavigationComp = ({ context: { config } }: IProps) => {
 
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
-          {
-            (config?.pages || []).map((page, idx) => (
-              <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+  
+        <Accordion allowMultipleOpen={false}>
+          { Object.keys(groupedPages).map((key, index) => ( 
+                      <div data-label={key}>
+                        {(groupedPages[key] || []).map((page, idx) => (
+                            <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+                        ))}
+                      </div>
             ))
           }
+        </Accordion>
         </div>
       </div>
     </nav>
