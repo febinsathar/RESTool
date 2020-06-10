@@ -13,7 +13,6 @@ const AccordionSection = (props: IProps) => {
 
  const { children, onClickItem, label, isOpen } = props;
 
-  console.log("isOpen", isOpen)
   const onClick = () => {
     onClickItem(label);
   };

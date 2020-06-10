@@ -17,8 +17,6 @@ const NavigationComp = ({ context: { config } }: IProps) => {
 
   let pages = config?.pages || [];
   let groupedPages = groupBy(pages, 'group') || {};
-  console.log(groupedPages)
-
 
   return (
     <nav className="app-nav">
@@ -35,7 +33,7 @@ const NavigationComp = ({ context: { config } }: IProps) => {
   
         <Accordion allowMultipleOpen={false}>
           { Object.keys(groupedPages).map((key, index) => ( 
-                      <div data-label={key}>
+                      <div key={key} data-label={key}>
                         {(groupedPages[key] || []).map((page, idx) => (
                             <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
                         ))}

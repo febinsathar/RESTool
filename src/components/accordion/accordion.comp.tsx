@@ -45,6 +45,7 @@ const Accordion = (props: IProps) => {
     <div>
       {children.map((child: any) => (
         <AccordionSection
+          key={child.props['data-label']}
           isOpen={!!openSections[child.props['data-label']]}
           label={child.props['data-label']}
           onClickItem={onClickItem}

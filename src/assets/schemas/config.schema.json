@@ -15,6 +15,12 @@
         "$ref": "#/definitions/page"
       }
     },
+    "auth": {
+      "type": "object",
+      "items": {
+        "$ref": "#/definitions/auth"
+      }
+    },
     "baseUrl": {
       "type": "string",
       "description": "Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: \"https://restool-sample-app.herokuapp.com/api\"\n\nNote: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method."
@@ -104,6 +110,23 @@
         }
       }
     },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "type of authenticaltion system token/simple"
+        },
+        "methods": {
+          "$ref": "#/definitions/methods"
+        }
+      },
+      "required": [
+        "type",
+        "methods"
+      ]
+    },
     "page": {
       "type": "object",
       "additionalProperties": false,
@@ -115,6 +138,10 @@
         "id": {
           "type": "string",
           "description": "A unique identifier for the page. RESTool will use it to navigate between pages."
+        },
+        "group": {
+          "type": "string",
+          "description": "Group in which page belong's to."
         },
         "description": {
           "type": "string",

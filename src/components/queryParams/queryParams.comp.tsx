@@ -35,7 +35,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
 
       return field;
     });
-
+    console.log(updatedQueryParams)
     setQueryParams(updatedQueryParams);
 
     if (submitAfterChange) {
