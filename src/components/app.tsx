@@ -148,10 +148,11 @@ function App() {
                 <Navigation />
               }
               </div>
-              <div className="logout" onClick={logout}>
+              {config.unauthorizedRedirectUrl && <div className="logout" onClick={logout}>
                 <i className="fa fa-sign-out" aria-hidden="true"></i>
                 <p>Logout</p>
               </div>
+              }
             </aside>
             {
               config &&
