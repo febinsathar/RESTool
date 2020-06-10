@@ -26,7 +26,6 @@ const Accordion = (props: IProps) => {
   });
 
   const onClickItem = (label: string) => {
-    console.log("label", label)
     const isOpen = !!openSections[label];
 
     if (allowMultipleOpen) {

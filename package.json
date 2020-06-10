@@ -35,12 +35,24 @@
     "deploy": "gh-pages -d build",
     "start:prod": "NODE_ENV=production node build/server",
     "app:env:loader": "node devTools/env/loader",
-    "config:uploader": "TS_NODE_PROJECT='./tsconfig.server.json' ts-node devTools/configUploader.js"
+    "config:uploader": "TS_NODE_PROJECT='./tsconfig.server.json' ts-node devTools/configUploader.js",
+    "lint": "eslint --ignore-path .eslintignore -- .",
+    "lint:fix": "eslint --ignore-path .eslintignore --fix -- .",
+    "lint:staged": "lint-staged",
+    "prettify": "prettier --write"
   },
   "proxy": "http://localhost:1729",
-  "eslintConfig": {
-    "extends": "react-app"
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:fix",
+      "git add --force"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add --force"
+    ]
   },
+  "pre-commit": "lint:staged",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -78,8 +90,12 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
+    "eslint": "^7.2.0",
     "gh-pages": "^2.2.0",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
     "react-scripts": "3.3.0",
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.44",

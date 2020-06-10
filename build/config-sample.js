@@ -26,6 +26,7 @@ export default {
             }]
 
   },
+  },
   "pages": [
     {
       "name": "Cast & Characters",
