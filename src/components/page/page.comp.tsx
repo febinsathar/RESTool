@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
-import { find, remove, uniqBy } from 'lodash';
+import { find, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
@@ -41,6 +41,7 @@ const buildInitQueryParamsAndPaginationState = (
   initQueryParams: IConfigInputField[],
   initialPagination?: IPaginationState,
 } => {
+
   const initialPagination: IPaginationState | undefined = paginationConfig ? {
     type: paginationConfig.type,
     page: parseInt(paginationConfig.params?.page?.value || '1'),
@@ -52,8 +53,8 @@ const buildInitQueryParamsAndPaginationState = (
   } : undefined;
 
   if (paginationConfig) {
-      console.log("page",initQueryParams,find(initQueryParams, { name: 'page' }))
-    if (!find(initQueryParams, { name: 'page' })) {
+        
+    if (!initQueryParams.some(e => e.name === paginationConfig?.params?.page?.name)) {
       initQueryParams.push({
         name: paginationConfig?.params?.page?.name,
         label: paginationConfig?.params?.page?.label || 'Page',
@@ -61,9 +62,9 @@ const buildInitQueryParamsAndPaginationState = (
       });
     }
 
-    if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
+    if (paginationConfig?.params?.limit && !initQueryParams.some(e => e.name === paginationConfig?.params?.limit?.name)) {
       initQueryParams.push({
-        name: paginationConfig.params.limit.name,
+        name: paginationConfig?.params?.limit?.name,
         label: paginationConfig.params.limit.label || 'Limit',
         value: initialPagination?.limit
       });
@@ -86,7 +87,7 @@ const buildInitQueryParamsAndPaginationState = (
     }
   }
   //TODO: hack fix me
-  initQueryParams = uniqBy(initQueryParams, 'name')
+  // initQueryParams = uniqBy(initQueryParams, 'name')
   return {
     initQueryParams,
     initialPagination
