@@ -1,31 +1,7 @@
-// A dynamic config sample
 export default {
   "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
-  "auth":{
-    "type":"token",
-    "authHandler":{
-          "name":"Send Email",
-          "url": "/character/:id/sendEmail",
-          "actualMethod": "post",
-          "requestHeaders": {},
-          "fields": [{
-              "name": "username",
-              "type": "text",
-              "value": "",
-              "placeholder": "Enter username",
-              "label": "username"
-            },
-            {
-              "name": "password",
-              "type": "password",
-              "value": "",
-              "placeholder": "Enter password",
-              "label": "password"
-            }]
-
-  },
   "pages": [
     {
       "name": "Cast & Characters",
@@ -422,4 +398,3 @@ export default {
     }
   ]
 }
-

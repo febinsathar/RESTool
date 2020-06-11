@@ -8,7 +8,9 @@ class ConfigService extends HTTPService {
 
   public async getRemoteConfig(url: string) {
     if (url.endsWith('.js')) {
-      return (await import(/* webpackIgnore: true */url)).default;
+      const data =  (await import(/* webpackIgnore: true */url)).default;
+      console.log("loadded",url, data)
+      return data;
     }
     return await httpService.fetch({
       origUrl: url,

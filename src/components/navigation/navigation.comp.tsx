@@ -16,7 +16,16 @@ const NavigationComp = ({ context: { config } }: IProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   let pages = config?.pages || [];
-  let groupedPages = groupBy(pages, 'group') || {};
+  let isGrouped = pages.some(e => e.group)
+  let groupedPages = isGrouped? groupBy(pages, 'group') || {} : {};
+  if('undefined' in groupedPages){
+    pages = groupedPages['undefined']
+    delete groupedPages['undefined']
+  }else{
+    pages=[]
+  }
+
+  console.log("isGrouped",isGrouped)
 
   return (
     <nav className="app-nav">
@@ -30,7 +39,7 @@ const NavigationComp = ({ context: { config } }: IProps) => {
 
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
-  
+      { isGrouped &&
         <Accordion allowMultipleOpen={false}>
           { Object.keys(groupedPages).map((key, index) => ( 
                       <div key={key} data-label={key}>
@@ -41,6 +50,11 @@ const NavigationComp = ({ context: { config } }: IProps) => {
             ))
           }
         </Accordion>
+      }
+      {(pages).map((page, idx) => (
+            <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+          ))
+        }
         </div>
       </div>
     </nav>

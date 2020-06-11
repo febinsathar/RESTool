@@ -15,11 +15,11 @@ interface IProps {
 
 const Accordion = (props: IProps) => {
 
-  let { children, allowMultipleOpen } = props;
+  const { children, allowMultipleOpen } = props;
 
   const [openSections, setOpenSections] = useState<any>({});
 
-  children.forEach((child: { props: { isOpen: any; label: string }; }) => {
+  children.forEach((child: { props: { isOpen: boolean; label: string }; }) => {
     if (child.props.isOpen) {
       openSections[child.props.label] = true;
     }

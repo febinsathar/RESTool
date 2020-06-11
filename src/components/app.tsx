@@ -44,17 +44,20 @@ function App() {
   
       let remoteConfig: IConfig; 
       if(remoteConfigType!=='local'){
+          console.log("mode local")
           remoteConfig = await ConfigService.getRemoteConfig(`/remote/config.${remoteConfigType}`);
       }
       else{
           // Try to load config from window object first
           const windowConfig = (window as any).RESTool?.config;
+              console.log("mode windowConfig",windowConfig)
           if (!url && windowConfig) {
             remoteConfig = Object.assign({}, windowConfig, {});
           } else {
             remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
           }
       }
+    console.log("loadd",remoteConfig)
 
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
@@ -70,7 +73,6 @@ function App() {
       if (remoteConfig?.remoteUrl) {
         return await loadConfig(remoteConfig.remoteUrl);
       }
-
 
       setConfig(remoteConfig);
     } catch (e) {
