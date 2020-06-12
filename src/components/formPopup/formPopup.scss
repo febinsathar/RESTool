@@ -15,6 +15,7 @@
     .form-row {
       label {
         width: 140px;
+        word-break: break-all;
 
         @media screen and (max-width: 800px) {
           width: 100px;

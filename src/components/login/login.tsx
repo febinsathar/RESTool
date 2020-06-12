@@ -45,6 +45,7 @@ const PageComp = ({ context }: IProps) => {
       },
       responseType: 'json'
     });
+    console.log(loginResponse)
     localStorage.setItem('Authorization', `Bearer ${loginResponse['access_token']}`);
   }
 
