@@ -7,4 +7,4 @@ build/config.json
 build/config.js
 .env
 .envdocker
-build
+build/*

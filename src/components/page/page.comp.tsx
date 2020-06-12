@@ -228,7 +228,7 @@ const PageComp = ({ context }: IProps) => {
       const result = await httpService.fetch({
         method: actualMethod || 'get',
         origUrl: url,
-        queryParams,
+        queryParams: queryParams.filter(x=>x.value),
         headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
       let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
@@ -349,13 +349,13 @@ const PageComp = ({ context }: IProps) => {
     if (loading) {
       return;
     }
+
     
     if (reset) {
       setItems([]);
       remove(updatedParams, param => ['page', 'limit'].includes(param.name));
       updatedParams = buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams;
     }
-
     setQueryParams(updatedParams);
     setPagination(getUpdatedPaginationState(updatedParams));
 
@@ -364,6 +364,9 @@ const PageComp = ({ context }: IProps) => {
     if (paginationConfig?.type === 'infinite-scroll') {
       paramsToUrl = paramsToUrl.filter(param => !['page', 'limit'].includes(param.name));
     }
+    else{
+        paramsToUrl = paramsToUrl.filter(x=> x.value )
+    } 
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
