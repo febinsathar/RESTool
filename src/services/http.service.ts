@@ -130,7 +130,6 @@ class HttpService {
 
   private async makeRequest(url: string, params: any = {}, responseType: ResponseType = 'json') {
     const res: Response = await fetch(url, Object.assign({}, params, {}));
-    console.log("cookie",document.cookie);
     if (res.ok) {
       switch (responseType) {
         case 'json':
