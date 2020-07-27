@@ -10,7 +10,6 @@
     "flat": "^5.0.0",
     "i": "^0.3.6",
     "lodash": "^4.17.15",
-    "ml-param-store-node": "^1.0.40",
     "multiselect-react-dropdown": "^1.5.7",
     "natural-orderby": "^2.0.3",
     "node-sass": "^4.13.0",
