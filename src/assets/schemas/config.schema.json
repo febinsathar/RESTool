@@ -365,7 +365,8 @@
             "file",
             "password",
             "note",
-            "hidden"
+            "hidden",
+            "multiselect"
           ],
           "description": "Use the type field to define the type of the field."
         },

@@ -217,6 +217,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
                       field={field}
                       onChange={formChanged}
                       showReset={!field.type || field.type === 'text'}
+                      rawData={rawData}
                     />
                   );
                 })
