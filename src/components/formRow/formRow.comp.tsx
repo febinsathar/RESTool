@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { orderBy } from 'natural-orderby';
 import { toast } from 'react-toastify';
+// @ts-ignore
+import { Multiselect } from 'multiselect-react-dropdown';
+
 
 import { IConfigInputField, IConfigOptionSource, ICustomLabels } from '../../common/models/config.model';
 import { Button } from '../button/button.comp';
@@ -8,17 +11,19 @@ import { withAppContext } from '../withContext/withContext.comp';
 import { IAppContext } from '../app.context';
 import { dataHelpers } from '../../helpers/data.helpers';
 
+
 import './formRow.scss';
 
 interface IProps {
   context: IAppContext
   field: IConfigInputField
+  rawData?: any
   onChange: (fieldName: string, value: any, submitAfterChange?: boolean) => void
   showReset?: boolean
   direction?: 'row' | 'column'
 }
 
-export const FormRow = withAppContext(({ context, field, direction, showReset, onChange }: IProps) => {
+export const FormRow = withAppContext(({ context, field, direction, showReset, rawData, onChange }: IProps) => {
   const [optionSources, setOptionSources] = useState<any>({});
   const { httpService, activePage, config } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
@@ -39,6 +44,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         origUrl: url,
         queryParams: [],
         headers: Object.assign({}, pageHeaders, requestHeaders || {}),
+        rawData,
       });
 
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
@@ -61,6 +67,37 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         };
       });
 
+      setOptionSources({
+        ...optionSources,
+        [fieldName]: optionSourceData
+      });
+    } catch (e) {
+      toast.error(e.message);
+    }
+  }
+
+  async function loadOptionSourceFromRemoteForMultiSelect(fieldName: string, optionSource: IConfigOptionSource) {
+    try {
+      const { url, dataPath, actualMethod, requestHeaders } = optionSource;
+
+      if (!url) {
+        throw new Error(`URL option source (for field "${fieldName}") is empty.`);
+      }
+
+      const result = await httpService.fetch({
+        method: actualMethod || 'get',
+        origUrl: url,
+        queryParams: [],
+        headers: Object.assign({}, pageHeaders, requestHeaders || {}),
+        rawData,
+      });
+
+      const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+
+      if (!extractedData || !extractedData.length) {
+        throw new Error(`Option source data is empty (for field "${fieldName}")`);
+      }
+      const optionSourceData = extractedData;
       setOptionSources({
         ...optionSources,
         [fieldName]: optionSourceData
@@ -195,6 +232,47 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return <p className="note">{field.value}</p>;
       case 'date':
         return <input type="date" {...inputProps(customLabels?.placeholders?.date || 'Enter date...')} />;
+      case 'multiselect':
+        {
+          const { optionSource } = field;
+
+          if (optionSource && !optionSources[field.name]) {
+            loadOptionSourceFromRemoteForMultiSelect(field.name, optionSource);
+            return <select multiple={true} {...inputProps()}><option>-- Loading Options... --</option></select>
+          }
+
+          const sortBy = field.optionSource?.sortBy;
+          const finalOptions: { value: string, display: string, selected: boolean }[] = optionSources[field.name] || field.options || [];
+          const sortedOptions = orderBy(finalOptions, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
+
+          const preSelectValues:any = [];
+          sortedOptions.forEach((option:any)=>{
+            if(option.selected){
+              preSelectValues.push(option)
+            }
+          })
+
+          if(preSelectValues.length > 0){
+            field.value = Array.from(preSelectValues, (item:any) => item.id)
+          }
+
+          const onSelectItem = function(selectedList:any, selectedItem:any) {
+            field.value = Array.from(selectedList, (item:any) => item.id)
+          }
+          const onRemoveItem = function(selectedList:any, selectedItem:any) {
+            field.value = Array.from(selectedList, (item:any) => item.id)
+          }
+          return (
+            <Multiselect
+              options={sortedOptions} // Options to display in the dropdown
+              selectedValues={preSelectValues} // Preselected value to persist in dropdown
+              onSelect={onSelectItem}
+              onRemove={onRemoveItem} // Function will trigger on remove event
+              displayValue="name" // Property name to display in the dropdown options
+            />
+          );
+        };
+      
       case 'text':
       default:
         return <input type="text" {...inputProps(customLabels?.placeholders?.text || 'Enter text...')} />;

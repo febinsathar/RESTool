@@ -102,7 +102,7 @@ export interface IConfigMethod {
   fields: IConfigInputField[] | IConfigDisplayField[]
 }
 
-export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden' | 'date';
+export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden' | 'date' | 'multiselect';
 
 export interface IConfigInputField {
   originalName?: string
