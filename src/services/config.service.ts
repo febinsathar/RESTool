@@ -25,7 +25,7 @@ class ConfigService extends HTTPService {
     }
   }
 
-  public validateConfig(config: IConfig | null): { isValid: boolean, errorMessage: string | null } {
+  public validateConfig(config: IConfig | null): { isValid: boolean; errorMessage: string | null } {
     if (config === null) {
       return {
         isValid: true,
