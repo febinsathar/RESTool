@@ -311,17 +311,14 @@ const PageComp = ({ context }: IProps) => {
       }
 
       const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
-      fetchPageData(
-        {
-          actualMethod: actualMethod,
-          url: url,
-          requestHeaders: requestHeaders,
-          dataPath: dataPath,
-          dataTransform: dataTransform,
-          sortBy: sortBy
-        }
-      )
-
+      await fetchPageData({
+        actualMethod: actualMethod,
+        url: url,
+        requestHeaders: requestHeaders,
+        dataPath: dataPath,
+        dataTransform: dataTransform,
+        sortBy: sortBy
+      });
     } catch (e) {
       setError(e.message);
     }
@@ -329,7 +326,7 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
-  async function addItem(body: any, containFiles?: boolean) {
+  async function addItem(body: any, containFiles?: boolean, queryParams?: []) {
     if (!postConfig) {
       throw new Error('Post method is not defined.');
     }
@@ -339,6 +336,7 @@ const PageComp = ({ context }: IProps) => {
     return await httpService.fetch({
       method: actualMethod || 'post',
       origUrl: url,
+      queryParams,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
         ...pageHeaders,
@@ -417,6 +415,16 @@ const PageComp = ({ context }: IProps) => {
       remove(updatedParams, param => ['page', 'limit'].includes(param.name));
       updatedParams = buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams;
     }
+
+    updatedParams.map((queryParam, idx) => {
+        if (queryParam.type === 'select' && queryParam.value === '-- Select --') {
+            // default value means nothing was selected and thus we explicitly
+            // empty out the value in this case; otherwise the string '-- Select --'
+            // is used as the value for the given queryParams
+            queryParam.value = '';
+        }
+    });
+
     setQueryParams(updatedParams);
     setPagination(getUpdatedPaginationState(updatedParams, null));
 
@@ -431,16 +439,7 @@ const PageComp = ({ context }: IProps) => {
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
-      let value = queryParam.value;
-
-      if (queryParam.type === 'select' && value === '-- Select --') {
-          // default value means nothing was selected and thus we explicitly
-          // empty out the value in this case; otherwise the string '-- Select --'
-          // is used as the value for the given queryParams
-          value = '';
-      }
-
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(value || '')}`;
+      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
     }).join('&');
 
     // Pushing query state to url

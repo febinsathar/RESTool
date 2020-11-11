@@ -132,7 +132,7 @@ export interface IConfigOptionSource {
   requestHeaders: any
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean' | 'html';
 
 export interface IConfigDisplayField {
   name: string
@@ -143,6 +143,7 @@ export interface IConfigDisplayField {
   truncate: boolean
   url: string
   urlLabel?: string
+  htmlCode?: string;
 }
 
 export interface IConfigGetAllMethod extends IConfigMethod {
@@ -159,7 +160,8 @@ export interface IConfigGetAllMethod extends IConfigMethod {
 }
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
-  dataPath: string
+  dataPath: string,
+  responseType: 'json' | 'text' | 'boolean' | 'status';
 }
 
 export interface IConfigPostMethod extends IConfigMethod {
@@ -179,8 +181,8 @@ export interface IConfigCustomAction extends IConfigMethod {
   fields: IConfigInputField[]
 }
 
-export type IConfigPagination = 
-  IConfigQueryPagination | 
+export type IConfigPagination =
+  IConfigQueryPagination |
   IConfigBodyPagination;
 
 export type IConfigQueryPagination = _IConfigPagination<'query', IConfigQueryPaginationParams>;

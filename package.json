@@ -1,6 +1,6 @@
 {
   "name": "restool",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "dependencies": {
     "@smcloudstore/aws-s3": "^0.2.1",
     "ajv": "^6.12.1",
@@ -11,7 +11,7 @@
     "lodash": "^4.17.19",
     "multiselect-react-dropdown": "^1.5.7",
     "natural-orderby": "^2.0.3",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
